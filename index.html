@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Mapa Emplazamiento - 3 paneles</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <h1>Mapa Emplazamiento — 3 paneles</h1>
+    <div id="header-controls">
+      <label>Referencia catastral:
+        <input id="ref-cat" type="text" placeholder="Ej: 18123A02000110" size="20"/>
+      </label>
+      <button id="btn-buscar">Buscar</button>
+      <span id="status" aria-live="polite"></span>
+    </div>
+  </header>
+
+  <div id="container">
+    <div id="left-column">
+      <div class="panel" id="panel-a">
+        <div class="panel-header">A — España (Provincias)</div>
+        <div class="panel-controls">
+          <label>Color provincia: <input id="color-prov" type="color" value="#ffcc00"/></label>
+        </div>
+        <div id="map-a" class="map"></div>
+      </div>
+
+      <div class="panel" id="panel-b">
+        <div class="panel-header">B — Provincia (Municipios)</div>
+        <div class="panel-controls">
+          <label>Color municipio: <input id="color-mun" type="color" value="#ff9900"/></label>
+        </div>
+        <div id="map-b" class="map"></div>
+      </div>
+    </div>
+
+    <div id="right-column">
+      <div class="panel" id="panel-c">
+        <div class="panel-header">C — Municipio ampliado</div>
+        <div class="panel-controls">
+          <button id="btn-zoom-full">Zoom al municipio</button>
+        </div>
+        <div id="map-c" class="map"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- libs -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/shpjs@latest/dist/shp.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <!-- tu script -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+/* Layout general */
+body{ margin:0; font-family: Arial, sans-serif; }
+header{ background:#fff; padding:8px 12px; border-bottom:1px solid #ddd; position:sticky; top:0; z-index:1000; display:flex; align-items:center; justify-content:space-between; }
+#header-controls { display:flex; gap:8px; align-items:center; }
+#container{ display:flex; height:calc(100vh - 58px); } /* resto de la pantalla */
+#left-column{ width:40%; display:flex; flex-direction:column; }
+#right-column{ width:60%; }
+
+.panel{ border-right:1px solid #e6e6e6; padding:6px; box-sizing:border-box; display:flex; flex-direction:column; height:50%; }
+#panel-b{ height:50%; } /* panel A y B apilados en left-column */
+
+.panel-header{ font-weight:bold; margin-bottom:6px; }
+.panel-controls{ margin-bottom:6px; }
+
+.map{ flex:1; border:1px solid #bbb; }
+#map-a, #map-b { height: calc(50vh - 70px); } /* ajustes para left column */
+#map-c { height: calc(100vh - 100px); }
+
+#status { margin-left:10px; color:#333; font-size:0.9em; }
