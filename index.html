@@ -2,59 +2,409 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Mapa Emplazamiento - 3 paneles</title>
+  <title>Mapas de emplazamiento para proyectos</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <link rel="stylesheet" href="styles.css"/>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 <body>
   <header>
-    <h1>Mapa Emplazamiento — 3 paneles</h1>
-    <div id="header-controls">
-      <label>Referencia catastral:
-        <input id="ref-cat" type="text" placeholder="Ej: 18123A02000110" size="20"/>
-      </label>
-      <button id="btn-buscar">Buscar</button>
-      <span id="status" aria-live="polite"></span>
-    </div>
+    <h1>Mapas de emplazamiento para proyectos</h1>
+    <nav class="main-nav">
+      <div class="nav-center">
+        <button class="nav-btn active" data-tab="part1">Mapa 1 - Múltiple</button>
+        <button class="nav-btn" data-tab="part2">Mapa 2 - Único</button>
+      </div>
+      <button id="btn-instructions-header" class="instructions-btn">📋 Instrucciones</button>
+    </nav>
   </header>
 
-  <div id="container">
-    <div id="left-column">
-      <div class="panel" id="panel-a">
-        <div class="panel-header">A — España (Provincias)</div>
-        <div class="panel-controls">
-          <label>Color provincia: <input id="color-prov" type="color" value="#ffcc00"/></label>
-        </div>
-        <div id="map-a" class="map"></div>
-      </div>
+  <main>
+    <!-- PARTE 1 - MAPAS MÚLTIPLES -->
+    <div id="part1" class="tab-content active">
+      <div class="main-container">
+        <!-- Panel de controles izquierdo -->
+        <div class="controls-panel">
+          <!-- Sección de búsqueda -->
+          <div class="control-group">
+            <h4>🔍 Búsqueda de Referencias</h4>
+            <div class="search-control">
+              <label>Referencia catastral (separar con ";"):</label>
+              <input id="refInput" type="text" placeholder="Ej: 18123A02400146; 18123A02400099">
+            </div>
+            <div class="search-control">
+              <label>Color selección:</label>
+              <input id="colorPickerSelection" type="color" value="#ffcc00">
+            </div>
+            <div class="search-control">
+              <label>Color resto:</label>
+              <input id="colorPickerBackground" type="color" value="#e0e0e0">
+            </div>
+            <div class="search-control">
+              <label class="circle-label">Mostrar círculo:</label>
+              <select id="circleToggle">
+                <option value="no">No</option>
+                <option value="si">Sí</option>
+              </select>
+            </div>
+            <button id="btn-process-ref" class="search-btn">Buscar Referencias</button>
+          </div>
 
-      <div class="panel" id="panel-b">
-        <div class="panel-header">B — Provincia (Municipios)</div>
-        <div class="panel-controls">
-          <label>Color municipio: <input id="color-mun" type="color" value="#ff9900"/></label>
+          <!-- Controles de zoom -->
+          <div class="control-group">
+            <h4>🎯 Controles de Zoom</h4>
+            <div class="zoom-control">
+              <label>Mapa 1 (Provincias):</label>
+              <input type="range" class="zoom-slider" id="zoom-slider-1" min="1" max="18" value="6">
+            </div>
+            <div class="zoom-control">
+              <label>Mapa 2 (Municipios):</label>
+              <input type="range" class="zoom-slider" id="zoom-slider-2" min="1" max="18" value="6">
+            </div>
+            <div class="zoom-control">
+              <label>Mapa 3 (Parcela):</label>
+              <input type="range" class="zoom-slider" id="zoom-slider-3" min="1" max="18" value="6">
+              <label class="circle-size-label">Tamaño círculo:</label>
+              <input type="range" class="circle-slider" id="circle-slider" min="1" max="500" value="10">
+            </div>
+          </div>
+
+          <!-- Controles de estrella -->
+          <div class="control-group star-controls-group">
+            <h4>⭐ Control de Estrella</h4>
+            <div class="star-control">
+              <label>Posición X:</label>
+              <input type="range" id="star-pos-x" min="0" max="500" value="50">
+            </div>
+            <div class="star-control">
+              <label>Posición Y:</label>
+              <input type="range" id="star-pos-y" min="0" max="400" value="50">
+            </div>
+            <div class="star-control">
+              <label>Tamaño:</label>
+              <input type="range" id="star-size" min="20" max="200" value="60">
+            </div>
+            <button class="star-toggle-btn" id="star-toggle">Mostrar Estrella</button>
+          </div>
         </div>
-        <div id="map-b" class="map"></div>
+
+        <!-- Contenedor de mapas -->
+        <div class="maps-grid-container" id="maps-container">
+          <!-- Mapa 1 - Arriba izquierda -->
+          <div class="map-grid-item map-1">
+            <h3>Mapa 1 - Provincias</h3>
+            <div id="map-container-1">
+              <div id="map-a"></div>
+              
+              <!-- Estrella personalizada -->
+              <div class="custom-star" id="custom-star" style="display: none;">
+                <img src="https://mapaemplazamiento.netlify.app/estrella.png" alt="Estrella del Norte">
+                <div class="star-resize-handle"></div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Mapa 3 - Toda la mitad derecha -->
+          <div class="map-grid-item map-3">
+            <h3>Mapa 3 - Parcela SIGPAC</h3>
+            <div id="map-container-3">
+              <div id="map-c"></div>
+            </div>
+          </div>
+
+          <!-- Mapa 2 - Abajo izquierda -->
+          <div class="map-grid-item map-2">
+            <h3>Mapa 2 - Municipios</h3>
+            <div id="map-container-2">
+              <div id="map-b"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel derecho -->
+        <div class="right-panel">
+          <div class="control-group contact-info">
+            <h4>📞 CONTACTO</h4>
+            <p><strong>Juan Ramírez Tarifa</strong></p>
+            <p>Email: <a href="mailto:jramirezt.jrt@gmail.com">jramirezt.jrt@gmail.com</a></p>
+          </div>
+          
+          <div class="control-group">
+            <h4>🖼️ Exportar Mapa</h4>
+            <button id="btn-export-image-map1" class="export-btn">Generar Imagen del Mapa Múltiple</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div id="right-column">
-      <div class="panel" id="panel-c">
-        <div class="panel-header">C — Municipio ampliado</div>
-        <div class="panel-controls">
-          <button id="btn-zoom-full">Zoom al municipio</button>
+    <!-- PARTE 2 - MAPA ÚNICO -->
+    <div id="part2" class="tab-content">
+      <div class="main-container-part2">
+        <!-- Panel de controles -->
+        <div class="controls-panel-part2">
+          <div class="control-group">
+            <h4>🔍 Búsqueda de Parcelas</h4>
+            <div class="search-control">
+              <label>Referencias catastrales (separar con ";"):</label>
+              <input id="refInput-part2" type="text" placeholder="Ej: 18123A02400146; 18123A02400099">
+            </div>
+            <div class="search-control">
+              <label>Color del borde:</label>
+              <input id="colorPickerBorder" type="color" value="#ff0000">
+            </div>
+            <div class="search-control">
+              <label>Color del círculo:</label>
+              <input id="colorPickerCircle" type="color" value="#0000ff">
+            </div>
+            <div class="search-control">
+              <label>Grosor del borde:</label>
+              <input type="range" id="borderWidth" min="1" max="10" value="3">
+              <span id="borderWidthValue">3px</span>
+            </div>
+            <div class="search-control">
+              <label>Mostrar círculo:</label>
+              <select id="circleToggle-part2">
+                <option value="no">No</option>
+                <option value="si">Sí</option>
+              </select>
+            </div>
+            <div class="search-control">
+              <label>Tamaño círculo:</label>
+              <input type="range" id="circleSize-part2" min="1" max="100" value="10">
+            </div>
+            <button id="btn-process-ref-part2" class="search-btn">Cargar Parcelas</button>
+          </div>
+
+          <div class="control-group">
+            <h4>🎯 Control de Zoom</h4>
+            <div class="zoom-control">
+              <label>Nivel de zoom:</label>
+              <input type="range" class="zoom-slider" id="zoom-slider-part2" min="1" max="18" value="6">
+              <span id="zoomValue">6</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h4>🗺️ Capa Base</h4>
+            <div class="search-control">
+              <label>Estilo del mapa:</label>
+              <select id="mapStyle">
+                <option value="osm">OpenStreetMap Standard</option>
+                <option value="satellite">Satélite</option>
+                <option value="terrain">Terreno</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h4>📝 Control de Textos</h4>
+            <div class="search-control">
+              <label>Texto activo:</label>
+              <select id="textSelector">
+                <option value="1">Texto 1</option>
+                <option value="2">Texto 2</option>
+                <option value="3">Texto 3</option>
+                <option value="4">Texto 4</option>
+                <option value="5">Texto 5</option>
+                <option value="6">Texto 6</option>
+                <option value="7">Texto 7</option>
+                <option value="8">Texto 8</option>
+                <option value="9">Texto 9</option>
+                <option value="10">Texto 10</option>
+              </select>
+            </div>
+            <div class="search-control">
+              <label>Texto:</label>
+              <input type="text" id="textInput" placeholder="Escribe tu texto aquí">
+            </div>
+            <div class="search-control">
+              <label>Color del texto:</label>
+              <input type="color" id="textColor" value="#000000">
+            </div>
+            <div class="search-control">
+              <label>Color de fondo:</label>
+              <input type="color" id="textBgColor" value="#ffffff">
+            </div>
+            <div class="search-control">
+              <label>Transparencia:</label>
+              <input type="range" id="textOpacity" min="0" max="100" value="80">
+              <span id="textOpacityValue">80%</span>
+            </div>
+            <div class="search-control">
+              <label>Tamaño de letra:</label>
+              <input type="range" id="textFontSize" min="8" max="32" value="14">
+              <span id="textFontSizeValue">14px</span>
+            </div>
+            <div class="search-control">
+              <label>
+                <input type="checkbox" id="textBold"> Texto en negrita
+              </label>
+            </div>
+            <button id="btn-add-text" class="search-btn">Añadir/Actualizar Texto en Mapa</button>
+          </div>
         </div>
-        <div id="map-c" class="map"></div>
+
+        <!-- Contenedor del mapa -->
+        <div class="map-container-part2">
+          <div id="map-single"></div>
+        </div>
+
+        <!-- Panel derecho -->
+        <div class="right-panel">
+          <div class="control-group contact-info">
+            <h4>📞 CONTACTO</h4>
+            <p><strong>Juan Ramírez Tarifa</strong></p>
+            <p>Email: <a href="mailto:jramirezt.jrt@gmail.com">jramirezt.jrt@gmail.com</a></p>
+          </div>
+          
+          <div class="control-group">
+            <h4>🖼️ Exportar Mapa</h4>
+            <button id="btn-export-image" class="export-btn">Generar Imagen del Mapa</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal de instrucciones -->
+  <div id="instructions-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>📋 Instrucciones de Uso</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="instructions-content">
+          <h3>Cómo usar la web de Mapas de ubicación</h3>
+          
+          <h4>Parte 1 - Mapas Múltiples:</h4>
+          <ol>
+            <li>Introduce una o más referencias catastrales en el campo de búsqueda para buscar tus parcelas</li>
+            <li>Separa múltiples referencias con punto y coma (;)</li>
+            <li>Selecciona los colores para las áreas seleccionadas y de fondo</li>
+            <li>Usa la opción de círculo para recalcar la parcela</li>
+            <li>Añade una estrella del norte donde más te guste</li>
+            <li>Genera una imagen del mapa múltiple con el botón correspondiente</li>
+          </ol>
+
+          <h4>Parte 2 - Mapa Único:</h4>
+          <ol>
+            <li>Introduce referencias catastrales para visualizar parcelas sobre mapa base</li>
+            <li>Personaliza el color y grosor del borde de las parcelas</li>
+            <li>Elige entre diferentes estilos de mapa (Standard, Satélite, Terreno)</li>
+            <li>Usa el control de zoom para ajustar la vista</li>
+            <li>Añade textos personalizados al mapa con diferentes colores y transparencia</li>
+            <li>Genera una imagen del mapa con el botón "Generar Imagen del Mapa"</li>
+          </ol>
+
+          <h4>Recomendación:</h4>
+          <ul>
+            <li>Para los colores se recomienda usar en el color de selección uno más oscuro y en el color del resto del mapa uno más claro, ejemplo: para selección amarillo oscuro y resto amarillo claro, rojo oscuro - rojo claro...</li>
+          </ul>
+        
+          <p><em>Nota: Todas las referencias deben ser de la misma provincia y municipio.</em></p>
+          <p><em>Nota2: Debido a la forma de trabajar de SIGPAC, no se podrán representar parcelas de municipios cerca de núncleos urbanos.</em></p>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- libs -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/shpjs@latest/dist/shp.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
-  <!-- tu script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
   <script src="app.js"></script>
+  <script src="app2.js"></script>
+  
+  <script>
+    // Control del modal de instrucciones
+    document.addEventListener('DOMContentLoaded', function() {
+      const modal = document.getElementById('instructions-modal');
+      const btn = document.getElementById('btn-instructions-header');
+      const span = document.getElementsByClassName('close-modal')[0];
+
+      btn.onclick = function() {
+        modal.style.display = 'block';
+      }
+
+      span.onclick = function() {
+        modal.style.display = 'none';
+      }
+
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      }
+
+      // Navegación entre pestañas
+      const tabButtons = document.querySelectorAll('.nav-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          
+          // Remover clase active de todos los botones y contenidos
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+          
+          // Añadir clase active al botón y contenido seleccionado
+          this.classList.add('active');
+          document.getElementById(tabId).classList.add('active');
+          
+          // Inicializar mapa 2 si se cambia a esa pestaña
+          if (tabId === 'part2') {
+            setTimeout(() => {
+              if (typeof initMapPart2 === 'function') {
+                initMapPart2();
+              }
+            }, 100);
+          }
+        });
+      });
+
+      // Control de transparencia de texto
+      const textOpacity = document.getElementById('textOpacity');
+      const textOpacityValue = document.getElementById('textOpacityValue');
+      
+      if (textOpacity && textOpacityValue) {
+        textOpacity.addEventListener('input', function() {
+          textOpacityValue.textContent = this.value + '%';
+        });
+      }
+
+      // Control de grosor de borde
+      const borderWidth = document.getElementById('borderWidth');
+      const borderWidthValue = document.getElementById('borderWidthValue');
+      
+      if (borderWidth && borderWidthValue) {
+        borderWidth.addEventListener('input', function() {
+          borderWidthValue.textContent = this.value + 'px';
+        });
+      }
+
+      // Control de tamaño de fuente
+      const textFontSize = document.getElementById('textFontSize');
+      const textFontSizeValue = document.getElementById('textFontSizeValue');
+      
+      if (textFontSize && textFontSizeValue) {
+        textFontSize.addEventListener('input', function() {
+          textFontSizeValue.textContent = this.value + 'px';
+        });
+      }
+
+      // Inicializar mapa 2 si está activo al cargar
+      if (document.getElementById('part2').classList.contains('active')) {
+        setTimeout(() => {
+          if (typeof initMapPart2 === 'function') {
+            initMapPart2();
+          }
+        }, 100);
+      }
+    });
+  </script>
 </body>
 </html>

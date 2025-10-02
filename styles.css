@@ -1,19 +1,762 @@
-/* Layout general */
-body{ margin:0; font-family: Arial, sans-serif; }
-header{ background:#fff; padding:8px 12px; border-bottom:1px solid #ddd; position:sticky; top:0; z-index:1000; display:flex; align-items:center; justify-content:space-between; }
-#header-controls { display:flex; gap:8px; align-items:center; }
-#container{ display:flex; height:calc(100vh - 58px); } /* resto de la pantalla */
-#left-column{ width:40%; display:flex; flex-direction:column; }
-#right-column{ width:60%; }
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:Inter, Arial, sans-serif; background:#f5f5f5; display: flex; flex-direction: column; min-height: 100vh; }
+header{ background:#fff; padding:12px; border-bottom:1px solid #e6e6e6; text-align:center; }
 
-.panel{ border-right:1px solid #e6e6e6; padding:6px; box-sizing:border-box; display:flex; flex-direction:column; height:50%; }
-#panel-b{ height:50%; } /* panel A y B apilados en left-column */
+main{ padding:20px; flex: 1; }
 
-.panel-header{ font-weight:bold; margin-bottom:6px; }
-.panel-controls{ margin-bottom:6px; }
+/* Contenedor principal */
+.main-container {
+  display: flex;
+  gap: 0;
+  max-width: 1600px;
+  margin: 0 auto;
+  height: 800px;
+}
 
-.map{ flex:1; border:1px solid #bbb; }
-#map-a, #map-b { height: calc(50vh - 70px); } /* ajustes para left column */
-#map-c { height: calc(100vh - 100px); }
+.main-container-part2 {
+  display: flex;
+  gap: 0;
+  max-width: 1600px;
+  margin: 0 auto;
+  height: 800px;
+}
 
-#status { margin-left:10px; color:#333; font-size:0.9em; }
+/* Panel de controles izquierdo */
+.controls-panel {
+  width: 320px;
+  background: #e6f2ff;
+  padding: 15px;
+  border-radius: 8px 0 0 8px;
+  border-right: 1px solid #b3d9ff;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto;
+}
+
+.controls-panel-part2 {
+  width: 300px;
+  background: #e6f2ff;
+  padding: 15px;
+  border-radius: 8px 0 0 8px;
+  border-right: 1px solid #b3d9ff;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto;
+}
+
+.control-group {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.control-group h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+/* Panel derecho */
+.right-panel {
+  width: 250px;
+  background: #e6f2ff;
+  padding: 15px;
+  border-radius: 0 8px 8px 0;
+  border-left: 1px solid #b3d9ff;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contact-info {
+  background: #e3f2fd;
+  border-left: 4px solid #2196F3;
+}
+
+.contact-info h4 {
+  color: #1976D2;
+  border-bottom-color: #bbdefb;
+}
+
+.contact-info p {
+  margin: 5px 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.contact-info a {
+  color: #1976D2;
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
+/* Controles de búsqueda */
+.search-control {
+  margin-bottom: 10px;
+}
+
+.search-control label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+#refInput, #refInput-part2 {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.search-btn, .export-btn {
+  width: 100%;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.search-btn:hover, .export-btn:hover {
+  background: #45a049;
+}
+
+.export-btn {
+  background: #2196F3;
+}
+
+.export-btn:hover {
+  background: #0b7dda;
+}
+
+/* Controles de zoom y estrella */
+.zoom-control, .star-control {
+  margin-bottom: 12px;
+}
+
+.zoom-control label, .star-control label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.zoom-slider, .circle-slider {
+  width: 100%;
+}
+
+.circle-size-label {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.star-controls-group {
+  background: #fffde7;
+}
+
+.star-toggle-btn {
+  width: 100%;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.star-toggle-btn:hover {
+  background: #45a049;
+}
+
+/* Grid de mapas */
+.maps-grid-container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0;
+  background: #fff;
+  overflow: hidden;
+  position: relative;
+}
+
+.map-grid-item {
+  position: relative;
+  text-align: center;
+  background: white;
+  padding: 0;
+  border: none;
+}
+
+.map-1 {
+  grid-column: 1;
+  grid-row: 1;
+  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.map-2 {
+  grid-column: 1;
+  grid-row: 2;
+  border-right: 1px solid #e0e0e0;
+}
+
+.map-3 {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+.map-grid-item h3 {
+  margin: 0;
+  padding: 10px;
+  background: #f5f5f5;
+  color: #333;
+  font-size: 14px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+#map-container-1, #map-container-2, #map-container-3 {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 40px);
+  overflow: hidden;
+}
+
+#map-a, #map-b, #map-c {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
+
+/* Contenedor del mapa parte 2 */
+.map-container-part2 {
+  flex: 1;
+  background: #fff;
+  border-radius: 0 8px 8px 0;
+  overflow: hidden;
+  position: relative;
+  min-height: 600px;
+}
+
+#map-single {
+  width: 100%;
+  height: 100%;
+  background: #f8f9fa;
+}
+
+/* Estrella arrastrable y redimensionable */
+.custom-star {
+  position: absolute;
+  cursor: move;
+  z-index: 1500;
+  user-select: none;
+  transition: transform 0.2s;
+}
+
+.custom-star img {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ELIMINADO: Handle de redimensionado de estrella */
+.star-resize-handle {
+  display: none; /* Eliminado el punto verde */
+}
+
+/* Texto personalizado */
+.custom-text {
+  position: absolute;
+  cursor: move;
+  z-index: 1000;
+  user-select: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  max-width: 200px;
+  word-wrap: break-word;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: box-shadow 0.2s;
+}
+
+.custom-text:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* ELIMINADO: Handle de redimensionado de texto */
+.text-resize-handle {
+  display: none; /* Eliminado el punto verde */
+}
+
+.text-close-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  background: #f44336;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 1002;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.text-close-btn:hover {
+  opacity: 1;
+}
+
+/* Coordenadas en los bordes */
+.coordinate-label {
+  position: absolute;
+  font-size: 11px;
+  color: #000;
+  background: rgba(255,255,255,0.9);
+  padding: 3px 6px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  z-index: 1000;
+  font-family: monospace;
+  pointer-events: none;
+}
+
+.coordinate-label.top {
+  top: 30px !important;
+  transform: translateX(-50%);
+}
+
+.coordinate-label.bottom {
+  bottom: 10px !important;
+  transform: translateX(-50%);
+}
+
+.coordinate-label.left {
+  left: 10px !important;
+  transform: translateY(-50%);
+}
+
+.coordinate-label.right {
+  right: 10px !important;
+  transform: translateY(-50%);
+}
+
+/* Loading */
+.loading-part2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 5px;
+  z-index: 1000;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Tooltip de parcelas */
+.parcel-tooltip {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  padding: 5px 8px;
+}
+
+/* Mejoras para los controles de texto */
+.search-control label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.search-control input[type="checkbox"] {
+  margin: 0;
+  width: auto;
+}
+
+/* Controles específicos parte 2 */
+.controls-panel-part2 .search-control span {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+}
+
+.controls-panel-part2 .zoom-control span {
+  display: block;
+  text-align: center;
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Header centrado */
+.main-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.nav-center {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex: 1;
+}
+
+.nav-btn {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+
+.nav-btn:hover {
+  background: #5a6268;
+}
+
+.nav-btn.active {
+  background: #007bff;
+}
+
+.instructions-btn {
+  background: #FF9800;
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.instructions-btn:hover {
+  background: #F57C00;
+}
+
+/* Contenido de pestañas */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Modal de instrucciones */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 0;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.close-modal {
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.3s;
+}
+
+.close-modal:hover {
+  color: #000;
+}
+
+.modal-body {
+  padding: 20px;
+  line-height: 1.6;
+}
+
+.instructions-content h3 {
+  color: #FF9800;
+  margin-bottom: 15px;
+}
+
+.instructions-content h4 {
+  color: #333;
+  margin: 20px 0 10px 0;
+}
+
+.instructions-content ol, .instructions-content ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.instructions-content li {
+  margin-bottom: 8px;
+}
+
+.instructions-content strong {
+  color: #333;
+}
+
+.instructions-content em {
+  color: #666;
+  font-style: italic;
+}
+
+/* Grid lines para coordenadas */
+.grid-line {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  z-index: 500;
+}
+
+.grid-horizontal {
+  width: 100%;
+  height: 1px;
+  left: 0;
+}
+
+.grid-vertical {
+  width: 1px;
+  height: 100%;
+  top: 0;
+}
+
+/* Mejoras para la exportación */
+#maps-container, #map-single {
+    position: relative;
+}
+
+/* Asegurar que los elementos personalizados sean visibles en la exportación */
+.custom-star, .custom-text {
+    transform: translateZ(0); /* Forzar capa GPU */
+}
+
+/* Loading mejorado */
+.loading-part2, .loading {
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Botones de exportación en panel derecho */
+.right-panel .export-btn {
+    margin-top: 10px;
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+}
+
+.right-panel .export-btn:hover {
+    background: #0b7dda;
+}
+
+/* Responsive general */
+@media (max-width: 1200px) {
+  .main-container, .main-container-part2 {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .controls-panel, .controls-panel-part2 {
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+    border-right: none;
+    border-bottom: 1px solid #b3d9ff;
+  }
+  
+  .right-panel {
+    width: 100%;
+    border-radius: 0 0 8px 8px;
+    border-left: none;
+    border-top: 1px solid #b3d9ff;
+    order: 3;
+  }
+  
+  .maps-grid-container {
+    height: 600px;
+  }
+  
+  .map-container-part2 {
+    border-radius: 0 0 8px 8px;
+    height: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .maps-grid-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    height: auto;
+  }
+  
+  .map-1 {
+    grid-column: 1;
+    grid-row: 1;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .map-2 {
+    grid-column: 1;
+    grid-row: 2;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .map-3 {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  
+  .modal-content {
+    width: 95%;
+    margin: 10% auto;
+  }
+  
+  .map-container-part2 {
+    height: 500px;
+  }
+  
+  .main-nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .nav-center {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .instructions-btn {
+    width: 100%;
+  }
+}
+/* AÑADIR AL FINAL DE TU styles.css */
+
+/* SOLUCIÓN 1: Contenedores de mapa con dimensiones fijas y overflow controlado */
+#map-container-1, #map-container-2, #map-container-3, #map-single {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important; /* Previene desbordamientos */
+    contain: layout paint; /* Optimiza el rendering */
+}
+
+#map-a, #map-b, #map-c, #map-single .leaflet-container {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+}
+
+/* Asegurar que los mapas no se desplacen durante la exportación */
+.maps-grid-container, .map-container-part2 {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Forzar dimensiones específicas para los contenedores de grid */
+.map-grid-item {
+    min-height: 0; /* Permite que flex/grid controle el tamaño */
+    overflow: hidden;
+}
+
+/* Contenedor específico para Mapa 3 (el más problemático) */
+#map-container-3 {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: white; /* Fondo sólido para áreas vacías */
+}
+
+#map-c {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+}
