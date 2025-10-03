@@ -39,6 +39,13 @@ function initMaps(){
   
   mapA = L.map('map-a', mapOptions).setView([40.0, -4.0], 6);
   
+  // Añadir barra de escala al Mapa A
+  L.control.scale({
+    imperial: false,
+    metric: true,
+    position: 'bottomright'
+  }).addTo(mapA);
+  
   // Asegurar que el contenedor tenga dimensiones antes de inicializar
   setTimeout(() => {
     mapA.invalidateSize();
@@ -50,6 +57,13 @@ function initMaps(){
 
   mapB = L.map('map-b', mapOptions).setView([40.0, -4.0], 6);
   
+  // Añadir barra de escala al Mapa B
+  L.control.scale({
+    imperial: false,
+    metric: true,
+    position: 'bottomright'
+  }).addTo(mapB);
+  
   setTimeout(() => {
     mapB.invalidateSize();
   }, 150);
@@ -59,6 +73,13 @@ function initMaps(){
   }).addTo(mapB);
 
   mapC = L.map('map-c', mapOptions).setView([40.0, -4.0], 6);
+  
+  // Añadir barra de escala al Mapa C
+  L.control.scale({
+    imperial: false,
+    metric: true,
+    position: 'bottomright'
+  }).addTo(mapC);
   
   setTimeout(() => {
     mapC.invalidateSize();
@@ -70,6 +91,7 @@ function initMaps(){
 
   initZoomControls();
   initStarControls();
+  initMapNameEditing(); // Nueva función para editar nombres
   loadAllData();
   
   // Forzar redimensionado final después de cargar todo
@@ -976,6 +998,90 @@ function exportMap1ToImage() {
         });
     }, 1500);
 }
+
+// Función para editar nombres de mapas
+function initMapNameEditing() {
+    // Hacer los títulos editables con doble click
+    const mapTitles = document.querySelectorAll('.map-grid-item h3');
+    
+    mapTitles.forEach(title => {
+        title.classList.add('map-title-editable');
+        
+        // Doble click para editar
+        title.addEventListener('dblclick', function() {
+            const originalText = this.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = originalText;
+            input.className = 'map-title-edit-input';
+            
+            this.style.display = 'none';
+            this.parentNode.insertBefore(input, this);
+            input.focus();
+            
+            input.addEventListener('blur', function() {
+                finishEditing(input, this.previousElementSibling);
+            });
+            
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    finishEditing(input, this.previousElementSibling);
+                }
+            });
+        });
+    });
+    
+    // También añadir controles en el panel derecho como alternativa
+    addNameEditControlsToPanel();
+}
+
+function finishEditing(input, titleElement) {
+    if (input.value.trim() !== '') {
+        titleElement.textContent = input.value.trim();
+    }
+    titleElement.style.display = 'block';
+    input.remove();
+}
+
+function addNameEditControlsToPanel() {
+    const rightPanel = document.querySelector('#part1 .right-panel');
+    
+    const nameEditControl = document.createElement('div');
+    nameEditControl.className = 'control-group name-edit-control';
+    nameEditControl.innerHTML = `
+        <h5>✏️ Editar Nombres de Mapas</h5>
+        <div class="search-control">
+            <label>Mapa 1:</label>
+            <input type="text" id="edit-map1-name" value="Mapa 1 - Provincias">
+        </div>
+        <div class="search-control">
+            <label>Mapa 2:</label>
+            <input type="text" id="edit-map2-name" value="Mapa 2 - Municipios">
+        </div>
+        <div class="search-control">
+            <label>Mapa 3:</label>
+            <input type="text" id="edit-map3-name" value="Mapa 3 - Parcela SIGPAC">
+        </div>
+        <button id="btn-apply-names">Aplicar Cambios</button>
+    `;
+    
+    rightPanel.insertBefore(nameEditControl, rightPanel.querySelector('.contact-info'));
+    
+    // Event listener para el botón de aplicar
+    document.getElementById('btn-apply-names').addEventListener('click', function() {
+        const map1Name = document.getElementById('edit-map1-name').value;
+        const map2Name = document.getElementById('edit-map2-name').value;
+        const map3Name = document.getElementById('edit-map3-name').value;
+        
+        document.querySelector('.map-1 h3').textContent = map1Name;
+        document.querySelector('.map-2 h3').textContent = map2Name;
+        document.querySelector('.map-3 h3').textContent = map3Name;
+        
+        alert('Nombres actualizados correctamente');
+    });
+}
+
+// ← AQUÍ TERMINA EL CÓDIGO NUEVO Y LUEGO SIGUE EL (function(){ EXISTENTE
 
 (function(){
   const turfScript = document.createElement('script');

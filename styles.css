@@ -760,3 +760,87 @@ main{ padding:20px; flex: 1; }
     bottom: 0;
     background: white;
 }
+
+/* Barra de escala */
+.leaflet-control-scale {
+    margin-bottom: 20px !important;
+    margin-left: 20px !important;
+}
+
+/* Controles para editar nombres de mapas */
+.map-title-editable {
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.map-title-editable:hover {
+    background-color: #e3f2fd;
+}
+
+.map-title-edit-input {
+    width: 80%;
+    padding: 5px;
+    border: 1px solid #007bff;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Widget de edición de nombres en panel derecho */
+.name-edit-control {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border-left: 3px solid #007bff;
+}
+
+.name-edit-control h5 {
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    color: #333;
+}
+
+.name-edit-control input {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.name-edit-control button {
+    width: 100%;
+    padding: 6px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.name-edit-control button:hover {
+    background: #0056b3;
+}
+
+/* Ajustar posición de la barra de escala para Mapa 1 */
+#map-container-1 .leaflet-control-scale,
+#map-container-2 .leaflet-control-scale,
+#map-container-3 .leaflet-control-scale {
+    margin-bottom: 40px !important;
+    margin-right: 100px !important; /* ← Este es el cambio principal */
+}
+
+/* Asegurar que la barra de escala sea visible */
+.leaflet-control-scale-line {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 2px solid #777 !important;
+    border-top: none !important;
+    color: #333 !important;
+    font-size: 10px !important;
+    font-weight: bold !important;
+}

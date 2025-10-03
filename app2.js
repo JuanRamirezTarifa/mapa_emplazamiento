@@ -52,6 +52,13 @@ function initMapPart2() {
     // Crear el mapa sin controles de zoom
     mapSinglePart2 = L.map('map-single', mapOptions).setView([40.0, -4.0], 6);
     
+    // Añadir barra de escala al Mapa Único
+    L.control.scale({
+        imperial: false,
+        metric: true,
+        position: 'bottomright'
+    }).addTo(mapSinglePart2);
+    
     // Añadir capa base
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
